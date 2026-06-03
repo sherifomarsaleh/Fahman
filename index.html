@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>فهمان · مدرّس الرياضيات الذكي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#10243f; --ink2:#1c3a5e; --cream:#fff7ea; --paper:#fffdf8;
+    --gold:#f6a609; --gold-d:#d98a00; --coral:#ff6b6b; --teal:#0bb39b;
+    --line:#e7d9c2; --mut:#6f7e92; --shadow:rgba(16,36,63,.16);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Tajawal',sans-serif; color:var(--ink); min-height:100vh;
+    background:
+      radial-gradient(circle at 85% -5%, rgba(246,166,9,.18), transparent 42%),
+      radial-gradient(circle at 0% 105%, rgba(11,179,155,.16), transparent 45%),
+      #fdf3e3;
+    -webkit-font-smoothing:antialiased;
+  }
+  .app{max-width:880px;margin:0 auto;padding:18px 16px 28px;}
+
+  .head{display:flex;align-items:center;gap:13px;margin-bottom:14px;}
+  .logo{width:54px;height:54px;flex-shrink:0;filter:drop-shadow(0 6px 10px rgba(214,138,0,.35));}
+  .head h1{font-family:'Baloo Bhaijaan 2',cursive;font-weight:800;font-size:30px;
+    line-height:1;color:var(--ink);}
+  .head h1 b{color:var(--gold-d);}
+  .head p{font-size:13px;color:var(--mut);margin-top:3px;font-weight:500;}
+  .tag{margin-inline-start:auto;background:var(--ink);color:var(--cream);
+    font-size:11px;font-weight:700;padding:6px 12px;border-radius:30px;
+    font-family:'Tajawal';white-space:nowrap;align-self:flex-start;}
+
+  .rail-l{font-size:11px;font-weight:700;color:var(--mut);letter-spacing:.04em;
+    margin:6px 2px 7px;text-transform:uppercase;}
+  .rail{display:flex;gap:7px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px;
+    scrollbar-width:thin;align-items:center;}
+  .rail-group{flex-shrink:0;font-size:10.5px;font-weight:800;color:var(--gold-d);
+    white-space:nowrap;padding:0 8px;border-inline-start:2px solid var(--line);
+    line-height:1.3;max-width:120px;}
+  .rail-group:first-child{border-inline-start:none;padding-inline-start:2px;}
+  .chip{flex-shrink:0;background:var(--paper);border:1.5px solid var(--line);
+    border-radius:30px;padding:7px 13px;font-size:12.5px;font-weight:600;color:var(--ink2);
+    white-space:nowrap;display:flex;align-items:center;gap:6px;cursor:pointer;transition:.15s;}
+  .chip:hover{border-color:var(--gold);}
+  .chip .d{width:7px;height:7px;border-radius:50%;background:var(--line);}
+  .chip.now{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .chip.now .d{background:var(--gold);box-shadow:0 0 0 3px rgba(246,166,9,.3);}
+  .chip.done .d{background:var(--teal);}
+  .soon-tag{font-size:10px;font-weight:700;background:#f0e3cf;color:var(--ink2);
+    padding:1px 7px;border-radius:20px;}
+
+  .lesson{background:linear-gradient(135deg,var(--ink) 0%,var(--ink2) 100%);
+    color:var(--cream);border-radius:20px;padding:18px 20px;margin-bottom:14px;
+    box-shadow:0 14px 30px var(--shadow);position:relative;overflow:hidden;}
+  .lesson::after{content:"";position:absolute;left:-30px;bottom:-40px;width:150px;height:150px;
+    background:radial-gradient(circle,rgba(246,166,9,.28),transparent 70%);}
+  .lesson .u{font-size:12px;font-weight:600;color:var(--gold);margin-bottom:5px;}
+  .lesson h2{font-family:'Baloo Bhaijaan 2',cursive;font-weight:700;font-size:25px;line-height:1.1;}
+  .lesson .obj{font-size:13.5px;line-height:1.6;color:#dce7f4;margin-top:8px;max-width:560px;}
+  .prob-l{font-size:12px;font-weight:700;color:#bcd0e8;margin:14px 0 8px;position:relative;}
+  .prob{position:relative;background:rgba(255,247,234,.1);border:1.5px solid rgba(255,247,234,.28);
+    color:var(--cream);border-radius:14px;padding:14px 16px;font-family:'Baloo Bhaijaan 2',cursive;
+    font-weight:600;font-size:19px;line-height:1.5;}
+  .progress{position:relative;display:inline-flex;align-items:center;gap:6px;
+    background:rgba(255,247,234,.14);border:1.5px solid rgba(255,247,234,.3);color:var(--cream);
+    border-radius:30px;padding:5px 13px;font-size:12.5px;font-weight:700;margin-top:11px;}
+  .progress b{color:var(--gold);}
+
+  .chat-wrap{background:var(--paper);border:1.5px solid var(--line);border-radius:20px;
+    box-shadow:0 10px 26px var(--shadow);overflow:hidden;}
+  .chat{height:min(46vh,400px);overflow-y:auto;padding:18px 16px;display:flex;
+    flex-direction:column;gap:13px;}
+  .msg{display:flex;gap:9px;align-items:flex-end;max-width:88%;}
+  .msg.bot{align-self:flex-start;}
+  .msg.me{align-self:flex-end;flex-direction:row-reverse;}
+  .msg.wide{align-self:stretch;max-width:100%;}
+  .av{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;
+    background:var(--gold);box-shadow:0 3px 7px rgba(214,138,0,.4);}
+  .av svg{width:21px;height:21px;}
+  .bub{padding:11px 14px;border-radius:16px;font-size:14.5px;line-height:1.65;font-weight:500;
+    white-space:pre-wrap;}
+  .bot .bub{background:var(--cream);color:var(--ink);border-top-right-radius:5px;
+    border:1.5px solid var(--line);}
+  .me .bub{background:var(--ink);color:var(--cream);border-top-left-radius:5px;}
+  .bub b{color:var(--gold-d);}
+  .me .bub b{color:var(--gold);}
+  .wide .bub{flex:1;white-space:normal;}
+  .typing{display:flex;gap:4px;padding:4px 2px;}
+  .typing span{width:7px;height:7px;border-radius:50%;background:var(--gold);
+    animation:bob 1s infinite;}
+  .typing span:nth-child(2){animation-delay:.15s;} .typing span:nth-child(3){animation-delay:.3s;}
+  @keyframes bob{0%,60%,100%{transform:translateY(0);opacity:.5;}30%{transform:translateY(-5px);opacity:1;}}
+
+  .mark-row{display:flex;gap:8px;margin-top:10px;}
+  .mark{border:none;border-radius:10px;padding:7px 15px;font-family:'Tajawal';font-size:13.5px;
+    font-weight:700;cursor:pointer;transition:.15s;}
+  .mark.ok{background:var(--teal);color:#fff;}
+  .mark.no{background:#f0e3cf;color:var(--ink2);}
+  .mark:disabled{opacity:.5;cursor:default;}
+
+  .controls{display:flex;gap:8px;padding:11px 12px 0;flex-wrap:wrap;align-items:center;}
+  .ctl{flex:0 0 auto;border:1.5px solid var(--line);background:#fffefb;color:var(--ink2);
+    border-radius:12px;padding:9px 14px;font-family:'Tajawal';font-size:13.5px;font-weight:700;
+    cursor:pointer;transition:.15s;}
+  .ctl:hover{border-color:var(--gold);color:var(--ink);}
+  .ctl.next{margin-inline-start:auto;background:var(--gold);border-color:var(--gold);color:var(--ink);}
+  .ctl.next:hover{background:var(--gold-d);border-color:var(--gold-d);}
+  .ctl:disabled{opacity:.45;cursor:default;border-color:var(--line);background:#f3ece0;color:var(--mut);}
+
+  .composer{display:flex;gap:8px;padding:12px;border-top:1.5px solid var(--line);background:#fffefb;}
+  .composer input{flex:1;font-family:'Tajawal';font-size:15px;font-weight:500;padding:12px 15px;
+    border:1.5px solid var(--line);border-radius:14px;background:#fff;color:var(--ink);outline:none;}
+  .composer input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(246,166,9,.18);}
+  .composer input:disabled{background:#f3ece0;color:var(--mut);}
+  .send{background:var(--gold);border:none;border-radius:14px;width:50px;flex-shrink:0;
+    cursor:pointer;display:grid;place-items:center;transition:.15s;}
+  .send:hover{background:var(--gold-d);} .send:disabled{opacity:.4;cursor:default;}
+  .send svg{width:22px;height:22px;transform:scaleX(-1);}
+
+  /* "soon" card */
+  .soon-card{background:var(--paper);border:1.5px solid var(--line);border-radius:20px;
+    box-shadow:0 10px 26px var(--shadow);padding:40px 22px;text-align:center;}
+  .soon-card .e{font-size:46px;}
+  .soon-card h3{font-family:'Baloo Bhaijaan 2',cursive;font-weight:700;font-size:22px;
+    margin-top:10px;color:var(--ink);}
+  .soon-card p{font-size:14px;line-height:1.7;color:var(--mut);margin-top:8px;font-weight:500;
+    max-width:420px;margin-inline:auto;}
+
+  /* ===== geometry module (scoped under #geo to avoid collisions) ===== */
+  #geo .tabs{display:flex;gap:7px;margin-bottom:14px;}
+  #geo .tab{flex:1;font-family:'Tajawal';font-weight:700;font-size:13.5px;padding:10px 8px;
+    border:1.5px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink2);
+    cursor:pointer;transition:.15s;}
+  #geo .tab.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+  #geo .card{background:var(--paper);border:1.5px solid var(--line);border-radius:18px;padding:16px;
+    box-shadow:0 10px 26px rgba(16,36,63,.12);}
+  #geo .card h2{font-family:'Baloo Bhaijaan 2',cursive;font-weight:700;font-size:19px;margin-bottom:4px;}
+  #geo .card .sub{font-size:13px;color:var(--mut);line-height:1.6;margin-bottom:12px;}
+  #geo .panel{display:none;} #geo .panel.on{display:block;}
+  #geo svg{display:block;width:100%;height:auto;touch-action:none;border-radius:14px;
+    background:#fffefb;border:1.5px solid var(--line);}
+  #geo .readout{display:flex;align-items:center;justify-content:center;gap:10px;margin:12px 0;}
+  #geo .deg{font-family:'Baloo Bhaijaan 2',cursive;font-weight:800;font-size:30px;color:var(--ink);}
+  #geo .kind{font-family:'Tajawal';font-weight:800;font-size:16px;padding:5px 14px;border-radius:30px;
+    background:#eef3f8;color:var(--ink2);}
+  #geo .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px;}
+  #geo .chip{flex-shrink:1;font-family:'Tajawal';font-weight:700;font-size:13px;padding:8px 13px;
+    border-radius:11px;border:1.5px solid var(--line);background:#fff;color:var(--ink2);
+    cursor:pointer;transition:.15s;}
+  #geo .chip:hover{border-color:var(--gold);}
+  #geo .chip.on{background:var(--gold);border-color:var(--gold);color:var(--ink);}
+  #geo .task{margin-top:13px;padding:12px 14px;border-radius:13px;background:var(--cream);
+    border:1.5px solid var(--line);font-size:14px;font-weight:600;line-height:1.6;min-height:24px;}
+  #geo .task.good{background:#e7f7f3;border-color:#9fe0d3;color:#0a7d6c;}
+  #geo .task.bad{background:#fdeaea;border-color:#f3b6b6;color:#b23b30;}
+  #geo .btn{font-family:'Tajawal';font-weight:700;font-size:14px;border:none;border-radius:12px;
+    padding:11px 16px;cursor:pointer;background:var(--gold);color:var(--ink);transition:.15s;}
+  #geo .btn:hover{background:var(--gold-d);}
+  #geo .btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink2);}
+  #geo .row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+
+  /* ===== data module (scoped under #data) ===== */
+  #data .tabs{display:flex;gap:7px;margin-bottom:14px;}
+  #data .tab{flex:1;font-family:'Tajawal';font-weight:700;font-size:13.5px;padding:10px 8px;
+    border:1.5px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink2);
+    cursor:pointer;transition:.15s;}
+  #data .tab.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+  #data .card{background:var(--paper);border:1.5px solid var(--line);border-radius:18px;padding:16px;
+    box-shadow:0 10px 26px rgba(16,36,63,.12);}
+  #data .card h2{font-family:'Baloo Bhaijaan 2',cursive;font-weight:700;font-size:19px;margin-bottom:4px;}
+  #data .card .sub{font-size:13px;color:var(--mut);line-height:1.6;margin-bottom:12px;}
+  #data .panel{display:none;} #data .panel.on{display:block;}
+  #data svg{display:block;width:100%;height:auto;border-radius:14px;background:#fffefb;
+    border:1.5px solid var(--line);}
+  #data .q{font-weight:700;font-size:15.5px;margin:14px 0 10px;line-height:1.5;color:var(--ink);}
+  #data .composer{display:flex;gap:8px;}
+  #data .composer input{flex:1;font-family:'Tajawal';font-size:15px;font-weight:600;padding:11px 14px;
+    border:1.5px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);outline:none;}
+  #data .composer input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(246,166,9,.18);}
+  #data .btn{font-family:'Tajawal';font-weight:700;font-size:14px;border:none;border-radius:12px;
+    padding:11px 16px;cursor:pointer;background:var(--gold);color:var(--ink);transition:.15s;white-space:nowrap;}
+  #data .btn:hover{background:var(--gold-d);}
+  #data .btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink2);}
+  #data .row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+  #data .task{margin-top:12px;padding:12px 14px;border-radius:13px;background:var(--cream);
+    border:1.5px solid var(--line);font-size:14px;font-weight:600;line-height:1.6;min-height:24px;}
+  #data .task.good{background:#e7f7f3;border-color:#9fe0d3;color:#0a7d6c;}
+  #data .task.bad{background:#fdeaea;border-color:#f3b6b6;color:#b23b30;}
+  #data .stepper{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:12px;}
+  #data .step{width:48px;height:48px;border-radius:14px;border:none;background:var(--ink);color:#fff;
+    font-size:24px;font-weight:800;cursor:pointer;font-family:'Baloo Bhaijaan 2';}
+  #data .step:active{transform:scale(.94);}
+  #data .stepval{font-family:'Baloo Bhaijaan 2';font-weight:800;font-size:22px;min-width:90px;
+    text-align:center;color:var(--ink);}
+
+  .foot{margin-top:14px;font-size:11.5px;color:var(--mut);line-height:1.7;text-align:center;}
+  .foot b{color:var(--ink2);}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="head">
+    <svg class="logo" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="20" y="6" width="24" height="6" rx="3" fill="#10243f"/>
+      <path d="M16 14h32l-4 6H20l-4-6z" fill="#d98a00"/>
+      <rect x="18" y="20" width="28" height="30" rx="8" fill="#f6a609"/>
+      <rect x="23" y="25" width="18" height="20" rx="5" fill="#fff7ea"/>
+      <path d="M32 28v14M27 35h10" stroke="#d98a00" stroke-width="3" stroke-linecap="round"/>
+      <path d="M22 50h20l-3 6H25l-3-6z" fill="#10243f"/>
+      <circle cx="32" cy="59" r="2.6" fill="#0bb39b"/>
+    </svg>
+    <div>
+      <h1>فَهْمان<b>.</b></h1>
+      <p>مدرّس الرياضيات الذكي · يشرحلك خطوة بخطوة</p>
+    </div>
+    <span class="tag">الصف الرابع الابتدائي</span>
+  </div>
+
+  <div class="rail-l">منهج السنة كاملًا · ١٣ وحدة</div>
+  <div class="rail" id="rail"></div>
+
+  <div class="lesson">
+    <div class="u" id="l-unit"></div>
+    <h2 id="l-title"></h2>
+    <p class="obj" id="l-obj" style="display:none"></p>
+    <div id="probArea">
+      <div class="prob-l" id="prob-l">المسألة الحالية:</div>
+      <div class="prob" id="prob"></div>
+      <span class="progress" id="progress"></span>
+    </div>
+  </div>
+
+  <div id="practice">
+    <div class="chat-wrap">
+      <div class="chat" id="chat"></div>
+      <div class="controls">
+        <button class="ctl" id="hintBtn">💡 تلميح</button>
+        <button class="ctl" id="seeBtn" style="display:none">👀 شوف الإجابة</button>
+        <button class="ctl next" id="nextBtn" disabled>سؤال جديد ↻</button>
+      </div>
+      <div class="composer">
+        <input id="inp" type="text" inputmode="numeric" placeholder="اكتب إجابتك لفهمان…" autocomplete="off" />
+        <button class="send" id="send" aria-label="إرسال">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="#10243f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="soon" style="display:none">
+    <div class="soon-card">
+      <div class="e">🚧</div>
+      <h3>الدرس ده جاي قريب</h3>
+      <p id="soon-msg">الدرس ده جاي قريب</p>
+    </div>
+  </div>
+
+  <div id="geo" style="display:none">
+    <div class="tabs">
+      <button class="tab on" data-p="angles">الزوايا</button>
+      <button class="tab" data-p="shapes">الأشكال</button>
+      <button class="tab" data-p="sym">التماثل</button>
+    </div>
+    <div class="panel on" id="p-angles"><div class="card">
+      <h2>الزاوية المتحركة</h2>
+      <p class="sub">امسك النقطة الذهبية وحرّكها. شوف الزاوية بتتغيّر، وفهمان بيقولك نوعها على طول.</p>
+      <svg id="angSvg" viewBox="0 0 380 250">
+        <line id="rayFixed" x1="150" y1="200" x2="275" y2="200" stroke="#1c3a5e" stroke-width="4" stroke-linecap="round"/>
+        <path id="arc" fill="none" stroke="#f6a609" stroke-width="4"/>
+        <line id="rayMove" x1="150" y1="200" x2="150" y2="75" stroke="#0bb39b" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="150" cy="200" r="6" fill="#10243f"/>
+        <circle id="handle" cx="150" cy="75" r="13" fill="#f6a609" stroke="#fff" stroke-width="3" style="cursor:grab"/>
+      </svg>
+      <div class="readout"><span class="deg" id="degOut">٩٠°</span><span class="kind" id="kindOut">قائمة</span></div>
+      <div class="chips" id="tasks">
+        <button class="chip on" data-t="free">استكشاف حر</button>
+        <button class="chip" data-t="acute">اصنع زاوية حادّة</button>
+        <button class="chip" data-t="right">اصنع زاوية قائمة</button>
+        <button class="chip" data-t="obtuse">اصنع زاوية منفرجة</button>
+      </div>
+      <div class="task" id="angTask">حرّك النقطة وجرّب الأنواع المختلفة 👆</div>
+    </div></div>
+    <div class="panel" id="p-shapes"><div class="card">
+      <h2>اكتشف الأشكال</h2>
+      <p class="sub">دوس على شكل، وفهمان يوريك أضلاعه ورؤوسه وصفاته.</p>
+      <svg id="shapeSvg" viewBox="0 0 380 220"></svg>
+      <div class="readout"><span class="kind" id="shapeInfo">٣ أضلاع · ٣ رؤوس</span></div>
+      <div class="task" id="shapeProp"></div>
+      <div class="chips" id="shapeChips" style="margin-top:12px;"></div>
+    </div></div>
+    <div class="panel" id="p-sym"><div class="card">
+      <h2>هل الشكل متماثل؟</h2>
+      <p class="sub">الخط المنقّط مرآة. لو نص الشكل اليمين زي الشمال بالظبط، يبقى متماثل. قرّر بنفسك!</p>
+      <svg id="symSvg" viewBox="0 0 380 220"></svg>
+      <div class="row" style="margin-top:14px;">
+        <button class="btn" style="flex:1" id="symYes">متماثل ✓</button>
+        <button class="btn ghost" style="flex:1" id="symNo">غير متماثل ✗</button>
+      </div>
+      <div class="task" id="symTask">دوس على إجابتك للشكل اللي قدامك.</div>
+      <div class="row"><button class="btn ghost" id="symNext" style="margin-inline-start:auto">شكل تاني ↻</button></div>
+    </div></div>
+  </div>
+
+  <div id="data" style="display:none">
+    <div class="tabs">
+      <button class="tab on" data-p="read">اقرأ الرسم</button>
+      <button class="tab" data-p="build">اعمل عمود</button>
+    </div>
+    <div class="panel on" id="p-read"><div class="card">
+      <h2>عدد الكتب المقروءة في الأسبوع</h2>
+      <p class="sub">بُصّ على الأعمدة وجاوب. كل خط أفقي = كتاب واحد.</p>
+      <svg id="readSvg" viewBox="0 0 380 260"></svg>
+      <div class="q" id="qText"></div>
+      <div class="composer" id="numBox">
+        <input id="ans" type="text" inputmode="numeric" placeholder="اكتب إجابتك…" autocomplete="off" />
+        <button class="btn" id="check">تأكّد</button>
+      </div>
+      <div class="row" id="scBox" style="display:none;">
+        <button class="btn" id="reveal">شوف الإجابة 👀</button>
+      </div>
+      <div class="task" id="dTask">دوس "سؤال جديد" أو جاوب اللي قدامك.</div>
+      <div class="row">
+        <button class="btn ghost" id="dHint">تلميح 💡</button>
+        <button class="btn ghost" id="dNext" style="margin-inline-start:auto">سؤال جديد ↻</button>
+      </div>
+    </div></div>
+    <div class="panel" id="p-build"><div class="card">
+      <h2>اعمل العمود بنفسك</h2>
+      <p class="sub">حرّك عمود "الجمعة" بالأزرار لحد ما يوصل العدد المطلوب — عُدّ الخطوط!</p>
+      <svg id="buildSvg" viewBox="0 0 380 260"></svg>
+      <div class="stepper">
+        <button class="step" id="minus">−</button>
+        <span class="stepval" id="curVal">٠ كتب</span>
+        <button class="step" id="plus">+</button>
+      </div>
+      <div class="task" id="bTask"></div>
+      <div class="row"><button class="btn ghost" id="bNext" style="margin-inline-start:auto">هدف جديد ↻</button></div>
+    </div></div>
+  </div>
+
+  <p class="foot">
+    فهمان بيشتغل ببنك أسئلة وتلميحات متدرّجة جوه المتصفّح — من غير إنترنت ولا أي خادم، وإجاباته مضبوطة دايمًا.<br/>
+    <b>المنهج كامل:</b> ١٣ وحدة · أسئلة محلولة بالتلميح + هندسة تفاعلية بالتحريك واللمس. 🎯
+  </p>
+
+</div>
+
+<script>
+  /* ====================================================================
+     فهمان — نسخة ثابتة بالكامل (Static). كل المنطق في المتصفّح، من غير أي
+     خادم أو API أو مفتاح. ١٣ وحدة: ١٠ وحدات بنك أسئلة + تلميحات متدرّجة،
+     وحدة "قريبًا" (البيانات)، ووحدتين هندسة تفاعلية. كل الإجابات منقولة
+     حرفيًا من ملف fahman-MASTER-build.md (مصدر الحقيقة الوحيد) — مستحيل
+     فهمان يغلط أو يهلوس.
+     سلّم التلميح للأسئلة الرقمية: h1 → h2 → reveal → solution.
+     ==================================================================== */
+  const LESSONS = [
+    /* ===== 1 — القيمة المكانية ===== */
+    {
+      chip:"القيمة المكانية", title:"القيمة المكانية",
+      eyebrow:"المحور الأول · الحس العددي · الوحدة ١",
+      bank:[
+        { type:"num", q:"ما قيمة الرقم ٧ في العدد ٤٧٨٢٥؟", answer:"٧٠٠٠", sol:"قيمة ٧ = ٧٠٠٠ (خانة الألوف).",
+          ladder:["عُدّ خانات العدد من اليمين: آحاد، عشرات، مئات، ألوف… الرقم ٧ في أنهي خانة؟","٧ في خانة الألوف، قيمته = ٧ × ١٠٠٠. كام؟","٧ × ١٠٠٠ = ٧٠٠٠.","قيمة ٧ = ٧٠٠٠ (خانة الألوف)."] },
+        { type:"num", q:"ما قيمة الرقم ٦ في العدد ٦٣٩٠٤؟", answer:"٦٠٠٠٠", sol:"قيمة ٦ = ٦٠٠٠٠.",
+          ladder:["٦ أول رقم من الشمال. عُدّ من اليمين لحد ما توصله — في أنهي خانة؟","٦ في خانة عشرات الألوف، قيمته = ٦ × ١٠٠٠٠.","٦ × ١٠٠٠٠ = ٦٠٠٠٠.","قيمة ٦ = ٦٠٠٠٠."] },
+        { type:"num", q:"أي رقم في خانة المئات في العدد ٢٥٨١٧؟", answer:"٨", sol:"خانة المئات فيها ٨.",
+          ladder:["عُدّ من اليمين: ٧ آحاد، ١ عشرات، وبعدها المئات.","خانة المئات هي التالتة من اليمين.","الرقم فيها ٨.","خانة المئات فيها ٨."] },
+        { type:"num", q:"اكتب بالأرقام: ستة آلاف وخمسمائة وثلاثة.", answer:"٦٥٠٣", sol:"العدد ٦٥٠٣.",
+          ladder:["ستة آلاف = ٦ ألوف، خمسمائة = ٥ مئات، خانة العشرات فاضية (٠)، وتلاتة آحاد.","رتّب: ألوف ٦، مئات ٥، عشرات ٠، آحاد ٣.","٦٥٠٣.","العدد ٦٥٠٣."] },
+        { type:"num", q:"عدد فيه ٥ عشرات ألوف، ٢ ألوف، ٠ مئات، ٧ عشرات، ٤ آحاد — ما هو؟", answer:"٥٢٠٧٤", sol:"العدد ٥٢٠٧٤.",
+          ladder:["رتّب من الأكبر للأصغر: عشرات الألوف، ألوف، مئات، عشرات، آحاد.","٥ (عشرات ألوف)، ٢ (ألوف)، ٠ (مئات)، ٧ (عشرات)، ٤ (آحاد).","٥٢٠٧٤.","العدد ٥٢٠٧٤."] },
+        { type:"selfcheck", q:"اقرأ العدد ٣٤٠٦٢ بالكلمات.", answer:"أربعة وثلاثون ألفًا واثنان وستون", sol:"٣٤٠٦٢ = أربعة وثلاثون ألفًا واثنان وستون.",
+          ladder:["قسّم العدد: ٣٤ ألف، وبعدها ٠٦٢.","٣٤ = أربعة وثلاثون، و٦٢ = اثنان وستون. وصّلهم بـ «ألفًا و»."] }
+      ]
+    },
+    /* ===== 2 — استراتيجيات الجمع والطرح ===== */
+    {
+      chip:"الجمع والطرح", title:"استراتيجيات الجمع والطرح",
+      eyebrow:"المحور الأول · الحس العددي · الوحدة ٢",
+      bank:[
+        { type:"num", q:"٣٤٥٦٧ + ١٢٣٢١ = ؟", answer:"٤٦٨٨٨", sol:"٣٤٥٦٧ + ١٢٣٢١ = ٤٦٨٨٨.",
+          ladder:["رُص العددين، آحاد تحت آحاد، وابدأ من الآحاد: ٧ + ١ = ؟","كمّل: عشرات ٦+٢=٨، مئات ٥+٣=٨، ألوف ٤+٢=٦، عشرات الألوف ٣+١=٤.","٤٦٨٨٨.","٣٤٥٦٧ + ١٢٣٢١ = ٤٦٨٨٨."] },
+        { type:"num", q:"٢٧٥٦ + ١٤٨٥ = ؟", answer:"٤٢٤١", sol:"٢٧٥٦ + ١٤٨٥ = ٤٢٤١.",
+          ladder:["الآحاد ٦ + ٥ = ١١، أكبر من ٩، اكتب ١ واحمل ١. الآحاد في الناتج = كام؟","العشرات ٥+٨=١٣ +١=١٤ (اكتب ٤ احمل ١). كمّل.","المئات ٧+٤+١=١٢، الألوف ٢+١+١=٤. = ٤٢٤١.","٢٧٥٦ + ١٤٨٥ = ٤٢٤١."] },
+        { type:"num", q:"٨٦٥٤ − ٤٣٢١ = ؟", answer:"٤٣٣٣", sol:"٨٦٥٤ − ٤٣٢١ = ٤٣٣٣.",
+          ladder:["الأكبر فوق، اطرح من الآحاد: ٤ − ١ = ؟","عشرات ٥−٢=٣، مئات ٦−٣=٣، ألوف ٨−٤=٤.","٤٣٣٣.","٨٦٥٤ − ٤٣٢١ = ٤٣٣٣."] },
+        { type:"num", q:"٥٠٠٠٠ − ٢٣٤٥٦ = ؟", answer:"٢٦٥٤٤", sol:"تأكيد: ٢٦٥٤٤ + ٢٣٤٥٦ = ٥٠٠٠٠.",
+          ladder:["هنستلف. الآحاد ٠ − ٦ مش ممكن، استلف من اللي على الشمال.","عبر الأصفار كل صفر ياخد ٩ والأخير ١٠: آحاد ١٠−٦=٤، عشرات ٩−٥=٤، مئات ٩−٤=٥، ألوف ٩−٣=٦، عشرات الألوف ٤−٢=٢.","٢٦٥٤٤.","تأكيد: ٢٦٥٤٤ + ٢٣٤٥٦ = ٥٠٠٠٠."] },
+        { type:"num", q:"مكتبة فيها ١٢٣٤٥ كتاب واشترت ٦٧٨٩. بقى عندها كام؟", answer:"١٩١٣٤", sol:"١٩١٣٤ كتاب.",
+          ladder:["اشترت كمان، العدد هيزيد — نجمع.","اجمع ١٢٣٤٥ + ٦٧٨٩ (خد بالك من الحمل).","١٩١٣٤.","١٩١٣٤ كتاب."] },
+        { type:"num", q:"سكان قرية ٤٥٠٠٠، سافر منهم ١٢٣٤٠. فضل كام؟", answer:"٣٢٦٦٠", sol:"٣٢٦٦٠ نسمة.",
+          ladder:["«سافر منهم» العدد هيقل — نطرح.","اطرح ٤٥٠٠٠ − ١٢٣٤٠ (استلاف).","٣٢٦٦٠.","٣٢٦٦٠ نسمة."] }
+      ]
+    },
+    /* ===== 3 — مفاهيم القياس ===== */
+    {
+      chip:"مفاهيم القياس", title:"مفاهيم القياس",
+      eyebrow:"المحور الأول · الحس العددي · الوحدة ٣",
+      bank:[
+        { type:"num", q:"كم سنتيمتر في ٣ أمتار؟", answer:"٣٠٠", sol:"كل متر ١٠٠ سم.",
+          ladder:["المتر = ١٠٠ سم. ٣ × ١٠٠ = ؟","٣ × ١٠٠ = ٣٠٠.","٣٠٠ سم.","كل متر ١٠٠ سم."] },
+        { type:"num", q:"حوّل ٢ كيلومتر إلى أمتار.", answer:"٢٠٠٠", sol:"٢٠٠٠ متر.",
+          ladder:["الكيلومتر = ١٠٠٠ متر. ٢ × ١٠٠٠ = ؟","٢٠٠٠.","٢ كم = ٢٠٠٠ م.","٢٠٠٠ متر."] },
+        { type:"num", q:"كم جرام في ٥ كيلوجرام؟", answer:"٥٠٠٠", sol:"٥٠٠٠ جرام.",
+          ladder:["الكيلوجرام = ١٠٠٠ جرام. ٥ × ١٠٠٠ = ؟","٥٠٠٠.","٥٠٠٠ جرام.","٥٠٠٠ جرام."] },
+        { type:"num", q:"كم دقيقة في ساعتين؟", answer:"١٢٠", sol:"١٢٠ دقيقة.",
+          ladder:["الساعة = ٦٠ دقيقة. ٢ × ٦٠ = ؟","١٢٠.","١٢٠ دقيقة.","١٢٠ دقيقة."] },
+        { type:"num", q:"بدأت المذاكرة ٤ عصرًا وخلّصت ٦ مساءً. كام ساعة؟", answer:"٢", sol:"٢ ساعة.",
+          ladder:["٦ − ٤ = ؟","٢.","٢ ساعة.","٢ ساعة."] },
+        { type:"num", q:"حبل ١ متر و٥٠ سم، وحبل ٧٠ سم. كل الطول بالسم؟", answer:"٢٢٠", sol:"٢٢٠ سم.",
+          ladder:["١ متر = ١٠٠ سم، فالأول = ١٥٠ سم.","١٥٠ + ٧٠.","٢٢٠ سم.","٢٢٠ سم."] }
+      ]
+    },
+    /* ===== 4 — المساحة والمحيط ===== */
+    {
+      chip:"المساحة والمحيط", title:"المساحة والمحيط",
+      eyebrow:"المحور الأول · الحس العددي · الوحدة ٤",
+      bank:[
+        { type:"num", q:"مستطيل طوله ٨ سم وعرضه ٣ سم. أوجد المحيط.", answer:"٢٢", sol:"المحيط ٢٢ سم.",
+          ladder:["المحيط = ٢ × (الطول + العرض). ٨ + ٣ = ؟","١١ × ٢.","٢٢ سم.","المحيط ٢٢ سم."] },
+        { type:"num", q:"مستطيل طوله ٨ سم وعرضه ٣ سم. أوجد المساحة.", answer:"٢٤", sol:"٢٤ سنتيمتر مربع.",
+          ladder:["المساحة = الطول × العرض. ٨ × ٣ = ؟","٢٤.","٢٤ سم².","٢٤ سنتيمتر مربع."] },
+        { type:"num", q:"مربع ضلعه ٥ سم. أوجد محيطه.", answer:"٢٠", sol:"٢٠ سم.",
+          ladder:["المحيط = ٤ × الضلع. ٤ × ٥ = ؟","٢٠.","٢٠ سم.","٢٠ سم."] },
+        { type:"num", q:"مربع ضلعه ٥ سم. أوجد مساحته.", answer:"٢٥", sol:"٢٥ سنتيمتر مربع.",
+          ladder:["المساحة = الضلع × الضلع. ٥ × ٥ = ؟","٢٥.","٢٥ سم².","٢٥ سنتيمتر مربع."] },
+        { type:"num", q:"مستطيل مساحته ٣٦ سم² وطوله ٩ سم. كام عرضه؟", answer:"٤", sol:"٤ سم.",
+          ladder:["العرض = المساحة ÷ الطول. ٣٦ ÷ ٩ = ؟","٤.","٤ سم.","٤ سم."] },
+        { type:"num", q:"غرفة ٦ × ٤ أمتار. كام متر مربع سجاد يغطّيها؟", answer:"٢٤", sol:"٢٤ متر مربع.",
+          ladder:["التغطية = المساحة = ٦ × ٤.","٢٤.","٢٤ متر مربع.","٢٤ متر مربع."] }
+      ]
+    },
+    /* ===== 5 — الضرب كعلاقة ===== */
+    {
+      chip:"الضرب كعلاقة", title:"الضرب كعلاقة",
+      eyebrow:"المحور الثاني · العمليات والتفكير الجبري · الوحدة ٥",
+      bank:[
+        { type:"num", q:"مع سارة ٣ أقلام، ومع منى ٤ أضعافها. كام مع منى؟", answer:"١٢", sol:"١٢ قلم.",
+          ladder:["٤ أضعاف = × ٤. ٣ × ٤ = ؟","١٢.","١٢ قلم.","١٢ قلم."] },
+        { type:"num", q:"مع عمر ٢٠ كرة = ٥ أضعاف كرات أخوه. كام مع أخوه؟", answer:"٤", sol:"٤ كرات.",
+          ladder:["عشان نلاقي أخوه نقسم: ٢٠ ÷ ٥.","٤.","٤ كرات.","٤ كرات."] },
+        { type:"num", q:"٢٤ هي ٦ أضعاف أي عدد؟", answer:"٤", sol:"٤.",
+          ladder:["٦ × كام = ٢٤؟ = ٢٤ ÷ ٦.","٤.","٢٤ = ٦ × ٤.","٤."] },
+        { type:"num", q:"أكمل: ١٨ = ٦ × ؟", answer:"٣", sol:"٣.",
+          ladder:["٦ × كام = ١٨؟","٣.","١٨ = ٦ × ٣.","٣."] },
+        { type:"num", q:"الكتاب بـ ٧ جنيه، والحقيبة ٣ أضعافه. كام ثمن الحقيبة؟", answer:"٢١", sol:"٢١ جنيه.",
+          ladder:["٣ × ٧.","٢١.","٢١ جنيه.","٢١ جنيه."] },
+        { type:"selfcheck", q:"في الفصل ٨ بنات، والأولاد ضعفهم. كام ولد؟ وكام الكل؟", answer:"١٦ ولد، والمجموع ٢٤", sol:"١٦ ولد، والمجموع ٢٤.",
+          ladder:["الأولاد = ٢ × ٨ = ١٦.","الكل = ١٦ + ٨."] }
+      ]
+    },
+    /* ===== 6 — العوامل والمضاعفات ===== */
+    {
+      chip:"العوامل والمضاعفات", title:"العوامل والمضاعفات",
+      eyebrow:"المحور الثاني · العمليات والتفكير الجبري · الوحدة ٦",
+      bank:[
+        { type:"selfcheck", q:"اكتب كل عوامل العدد ١٢.", answer:"١، ٢، ٣، ٤، ٦، ١٢", sol:"عوامل ١٢ هي: ١، ٢، ٣، ٤، ٦، ١٢.",
+          ladder:["العوامل بتقسم ١٢ بدون باقي. جرّب ١؟ ٢؟ ٣؟ ٤؟ ٦؟","١٢ = ١×١٢ = ٢×٦ = ٣×٤."] },
+        { type:"selfcheck", q:"هل ٧ أولي ولا غير أولي؟", answer:"أولي", sol:"٧ عدد أولي.",
+          ladder:["الأولي ملوش غير ١ ونفسه. ٧ يتقسم على إيه غير ١ و٧؟","ملوش عوامل تانية → أولي."] },
+        { type:"selfcheck", q:"هل ٩ أولي ولا غير أولي؟", answer:"غير أولي", sol:"٩ عدد غير أولي.",
+          ladder:["جرّب ٣.","٩ = ٣ × ٣ → غير أولي."] },
+        { type:"selfcheck", q:"اكتب أول ٤ مضاعفات للعدد ٥.", answer:"٥، ١٠، ١٥، ٢٠", sol:"أول ٤ مضاعفات: ٥، ١٠، ١٥، ٢٠.",
+          ladder:["المضاعفات = ٥×١، ٥×٢…","٥، ١٠، ١٥، ٢٠."] },
+        { type:"num", q:"أكبر عامل مشترك للعددين ٨ و١٢؟", answer:"٤", sol:"٤.",
+          ladder:["عوامل ٨ (١،٢،٤،٨)، عوامل ١٢ (١،٢،٣،٤،٦،١٢). المشترك؟","المشترك ١،٢،٤ — الأكبر؟","٤.","٤."] },
+        { type:"num", q:"أصغر مضاعف مشترك للعددين ٣ و٤؟", answer:"١٢", sol:"١٢.",
+          ladder:["مضاعفات ٣ (٣،٦،٩،١٢)، مضاعفات ٤ (٤،٨،١٢). أول مشترك؟","١٢.","١٢.","١٢."] }
+      ]
+    },
+    /* ===== 7 — الضرب والقسمة ===== */
+    {
+      chip:"الضرب والقسمة", title:"الضرب والقسمة",
+      eyebrow:"المحور الثاني · العمليات والتفكير الجبري · الوحدة ٧",
+      bank:[
+        { type:"num", q:"٢٣ × ٤ = ؟", answer:"٩٢", sol:"٢٣ × ٤ = ٩٢.",
+          ladder:["الآحاد ٣ × ٤ = ١٢ → اكتب ٢ احمل ١.","العشرات ٢×٤=٨ +١=٩.","٩٢.","٢٣ × ٤ = ٩٢."] },
+        { type:"num", q:"١٢٥ × ٣ = ؟", answer:"٣٧٥", sol:"٣٧٥.",
+          ladder:["الآحاد ٥×٣=١٥ اكتب ٥ احمل ١.","٢×٣=٦ +١=٧، ١×٣=٣.","٣٧٥.","٣٧٥."] },
+        { type:"num", q:"٤٦ × ٧ = ؟", answer:"٣٢٢", sol:"٣٢٢.",
+          ladder:["٦×٧=٤٢ اكتب ٢ احمل ٤.","٤×٧=٢٨ +٤=٣٢.","٣٢٢.","٣٢٢."] },
+        { type:"num", q:"٢٣ × ١٢ = ؟", answer:"٢٧٦", sol:"٢٣ × ١٢ = ٢٧٦.",
+          ladder:["٢٣ × ٢ = ٤٦.","٢٣ × ١٠ = ٢٣٠. اجمع ٤٦ + ٢٣٠.","٢٧٦.","٢٣ × ١٢ = ٢٧٦."] },
+        { type:"num", q:"٣٤ × ٢١ = ؟", answer:"٧١٤", sol:"٧١٤.",
+          ladder:["٣٤ × ١ = ٣٤.","٣٤ × ٢٠ = ٦٨٠. اجمع ٣٤ + ٦٨٠.","٧١٤.","٧١٤."] },
+        { type:"num", q:"علبة فيها ٢٤ قلم. كام قلم في ٦ علب؟", answer:"١٤٤", sol:"١٤٤ قلم.",
+          ladder:["٢٤ × ٦. الآحاد ٤×٦=٢٤ اكتب ٤ احمل ٢.","٢×٦=١٢ +٢=١٤.","١٤٤.","١٤٤ قلم."] },
+        { type:"num", q:"٨٤ ÷ ٤ = ؟", answer:"٢١", sol:"تأكيد: ٢١ × ٤ = ٨٤.",
+          ladder:["عكس الضرب: ٤ × كام = ٨٤. ابدأ بالعشرات ٨ ÷ ٤.","٨÷٤=٢، ٤÷٤=١.","٢١.","تأكيد: ٢١ × ٤ = ٨٤."] },
+        { type:"num", q:"٩٦ ÷ ٣ = ؟", answer:"٣٢", sol:"٣٢.",
+          ladder:["العشرات ٩ ÷ ٣.","٩÷٣=٣، ٦÷٣=٢.","٣٢.","٣٢."] },
+        { type:"selfcheck", q:"١٧ ÷ ٥ = ؟ (الناتج والباقي)", answer:"٣ والباقي ٢", sol:"١٧ ÷ ٥ = ٣ والباقي ٢.",
+          ladder:["٥×٣=١٥، ٥×٤=٢٠ (كتير).","الناتج ٣، الباقي ١٧−١٥=٢ (أصغر من ٥)."] },
+        { type:"num", q:"٦٤٨ ÷ ٢ = ؟", answer:"٣٢٤", sol:"٣٢٤.",
+          ladder:["ابدأ بالمئات ٦ ÷ ٢.","٦÷٢=٣، ٤÷٢=٢، ٨÷٢=٤.","٣٢٤.","٣٢٤."] },
+        { type:"num", q:"لو ٧ × ٦ = ٤٢، يبقى ٤٢ ÷ ٦ = ؟", answer:"٧", sol:"٧.",
+          ladder:["القسمة عكس الضرب.","٤٢ ÷ ٦ = ٧.","٧.","٧."] },
+        { type:"num", q:"٧٢ تلميذ على ٦ فصول بالتساوي. كل فصل كام؟", answer:"١٢", sol:"١٢ تلميذ.",
+          ladder:["٦ × كام = ٧٢؟","٦ × ١٢ = ٧٢.","١٢.","١٢ تلميذ."] }
+      ]
+    },
+    /* ===== 8 — ترتيب العمليات والمسائل الكلامية ===== */
+    {
+      chip:"ترتيب العمليات", title:"ترتيب العمليات والمسائل الكلامية",
+      eyebrow:"المحور الثاني · العمليات والتفكير الجبري · الوحدة ٨",
+      bank:[
+        { type:"num", q:"٣ + ٤ × ٢ = ؟", answer:"١١", sol:"الضرب قبل الجمع.",
+          ladder:["الضرب قبل الجمع. ٤ × ٢ = ؟","٣ + ٨.","١١.","الضرب قبل الجمع."] },
+        { type:"num", q:"(٣ + ٤) × ٢ = ؟", answer:"١٤", sol:"القوس غيّر الترتيب.",
+          ladder:["الأقواس الأول. ٣ + ٤ = ؟","٧ × ٢.","١٤.","القوس غيّر الترتيب."] },
+        { type:"num", q:"٢٠ − ٦ ÷ ٣ = ؟", answer:"١٨", sol:"١٨.",
+          ladder:["القسمة قبل الطرح. ٦ ÷ ٣ = ؟","٢٠ − ٢.","١٨.","١٨."] },
+        { type:"num", q:"٥ × ٣ + ٤ × ٢ = ؟", answer:"٢٣", sol:"٢٣.",
+          ladder:["اعمل الضربين: ٥×٣=١٥، ٤×٢=٨.","١٥ + ٨.","٢٣.","٢٣."] },
+        { type:"num", q:"اشترى ٣ كراسات بـ ٨ جنيه ودفع من ٥٠. كام الباقي؟", answer:"٢٦", sol:"٥٠ − ٣×٨ = ٢٦.",
+          ladder:["تمن الكراسات ٣ × ٨ = ؟","٥٠ − ٢٤.","٢٦ جنيه.","٥٠ − ٣×٨ = ٢٦."] },
+        { type:"num", q:"٤ أطباق كل طبق ٦ تفاحات، أكلت ٥. فضل كام؟", answer:"١٩", sol:"٤×٦ − ٥ = ١٩.",
+          ladder:["الكل ٤ × ٦ = ؟","٢٤ − ٥.","١٩.","٤×٦ − ٥ = ١٩."] }
+      ]
+    },
+    /* ===== 9 — الكسور الاعتيادية ===== */
+    {
+      chip:"الكسور الاعتيادية", title:"الكسور الاعتيادية",
+      eyebrow:"الترم الثاني · الوحدة ٩",
+      bank:[
+        { type:"num", q:"شكل مقسوم ٨ أجزاء، ملوّن ٣. اكتب الكسر الملوّن.", answer:"٣/٨", sol:"٣/٨.",
+          ladder:["الكسر = الملوّن فوق، الكل تحت. كام ملوّن؟ كام الكل؟","الملوّن ٣ (بسط)، الكل ٨ (مقام).","٣/٨.","٣/٨."] },
+        { type:"num", q:"اكتب كسرًا يساوي ١/٢ ومقامه ٦.", answer:"٣/٦", sol:"٣/٦.",
+          ladder:["اضرب مقام ١/٢ (وهو ٢) في كام عشان يبقى ٦؟","×٣ فوق وتحت: ١×٣ / ٢×٣.","٣/٦.","٣/٦."] },
+        { type:"num", q:"أيهما أكبر: ٣/٥ ولا ٢/٥؟", answer:"٣/٥", sol:"٣/٥.",
+          ladder:["المقام واحد (٥)، الأكبر صاحب البسط الأكبر.","٣ > ٢.","٣/٥ أكبر.","٣/٥."] },
+        { type:"num", q:"٢/٧ + ٣/٧ = ؟", answer:"٥/٧", sol:"٥/٧.",
+          ladder:["المقام واحد، اجمع البسط: ٢ + ٣.","البسط ٥، المقام ٧.","٥/٧.","٥/٧."] },
+        { type:"num", q:"٥/٨ − ٢/٨ = ؟", answer:"٣/٨", sol:"٣/٨.",
+          ladder:["اطرح البسط واسيب المقام: ٥ − ٢.","٣ / ٨.","٣/٨.","٣/٨."] },
+        { type:"num", q:"ما هو ١/٤ من ٢٠؟", answer:"٥", sol:"٢٠ ÷ ٤ = ٥.",
+          ladder:["١/٤ من ٢٠ = ٢٠ ÷ ٤.","٥.","٥.","٢٠ ÷ ٤ = ٥."] }
+      ]
+    },
+    /* ===== 10 — الكسور العشرية ===== */
+    {
+      chip:"الكسور العشرية", title:"الكسور العشرية",
+      eyebrow:"الترم الثاني · الوحدة ١٠",
+      bank:[
+        { type:"num", q:"اكتب ٧/١٠ في صورة كسر عشري.", answer:"٠٫٧", sol:"٠٫٧.",
+          ladder:["الأجزاء من عشرة = خانة واحدة بعد العلامة.","٧/١٠ = ٠٫٧.","٠٫٧.","٠٫٧."] },
+        { type:"num", q:"اكتب ٠٫٢٥ كسرًا اعتياديًا مقامه ١٠٠.", answer:"٢٥/١٠٠", sol:"٢٥/١٠٠.",
+          ladder:["خانتين بعد العلامة = أجزاء من مية. البسط ٢٥، المقام؟","١٠٠.","٢٥/١٠٠.","٢٥/١٠٠."] },
+        { type:"selfcheck", q:"في العدد ٣٫٤٧، ما قيمة الرقم ٤؟", answer:"٤/١٠ (أو ٠٫٤)", sol:"قيمة الرقم ٤ = ٤/١٠ (أو ٠٫٤).",
+          ladder:["أول رقم بعد العلامة = أجزاء من عشرة.","٤/١٠ = ٠٫٤."] },
+        { type:"num", q:"أيهما أكبر: ٠٫٧ ولا ٠٫٥؟", answer:"٠٫٧", sol:"٠٫٧.",
+          ladder:["قارن خانة الأجزاء من عشرة: ٧ ولا ٥؟","٧ أكبر.","٠٫٧.","٠٫٧."] },
+        { type:"num", q:"٠٫٣ + ٠٫٤ = ؟", answer:"٠٫٧", sol:"٠٫٧.",
+          ladder:["اجمع الأجزاء من عشرة: ٣ + ٤.","٧ من عشرة.","٠٫٧.","٠٫٧."] },
+        { type:"num", q:"٠٫٩ − ٠٫٦ = ؟", answer:"٠٫٣", sol:"٠٫٣.",
+          ladder:["٩ − ٦ من عشرة.","٣ من عشرة.","٠٫٣.","٠٫٣."] }
+      ]
+    },
+    /* ===== 11 — البيانات والتمثيلات البيانية (تفاعلية) ===== */
+    {
+      chip:"البيانات", title:"البيانات والتمثيلات البيانية",
+      eyebrow:"الترم الثاني · الوحدة ١١",
+      kind:"data"
+    },
+    /* ===== 12 — الهندسة (أشكال + تماثل) ===== */
+    {
+      chip:"الهندسة", title:"الهندسة — الأشكال والتماثل",
+      eyebrow:"الترم الثاني · الوحدة ١٢",
+      kind:"geo", geo:"shapes"
+    },
+    /* ===== 13 — الزوايا والدائرة ===== */
+    {
+      chip:"الزوايا والدائرة", title:"الزوايا والدائرة",
+      eyebrow:"الترم الثاني · الوحدة ١٣",
+      kind:"geo", geo:"angles"
+    }
+  ];
+
+  /* ترتيب الشريط الجانبي مع عناوين المحاور */
+  const RAIL = [
+    {g:"المحور الأول · الحس العددي"}, {u:0},{u:1},{u:2},{u:3},
+    {g:"المحور الثاني · العمليات والتفكير الجبري"}, {u:4},{u:5},{u:6},{u:7},
+    {g:"الترم الثاني"}, {u:8},{u:9},{u:10},{u:11},{u:12}
+  ];
+
+  const PRAISE = ["برافو! 🎉","ممتاز يا بطل!","تمام التمام!","شاطر جدًا!","أحسنت! 👏"];
+
+  let uIdx = 0;       // الوحدة الحالية
+  let pIdx = 0;       // المسألة الحالية
+  let step = 0;       // مؤشّر سلّم التلميحات
+  const solved = LESSONS.map(L => L.bank ? L.bank.map(() => false) : []);
+
+  /* ====== helpers ====== */
+  const AR = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+  const toAr = s => ('' + s).replace(/[0-9]/g, d => AR[+d]);
+  function normAns(s){
+    if (s == null) return '';
+    const m = {'٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9'};
+    return ('' + s)
+      .replace(/[٠-٩]/g, d => m[d])   // أرقام عربية → غربية
+      .replace(/٫/g, '.')             // العلامة العشرية العربية → نقطة
+      .replace(/[^0-9/.]/g, '');      // سيب الأرقام و"/" والنقطة بس
+  }
+  const isNumericAns = a => /^[0-9٠-٩]+$/.test(a);
+  const pick = a => a[Math.floor(Math.random() * a.length)];
+
+  const BOT_AV = '<div class="av"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v3M7 8h10a2 2 0 012 2v7a2 2 0 01-2 2H7a2 2 0 01-2-2v-7a2 2 0 012-2z" stroke="#10243f" stroke-width="2" stroke-linecap="round"/><circle cx="9.5" cy="13" r="1.3" fill="#10243f"/><circle cx="14.5" cy="13" r="1.3" fill="#10243f"/></svg></div>';
+  const rail = document.getElementById('rail');
+  const chat = document.getElementById('chat');
+  const inp  = document.getElementById('inp');
+  const send = document.getElementById('send');
+  const probEl = document.getElementById('prob');
+  const probL = document.getElementById('prob-l');
+  const progressEl = document.getElementById('progress');
+  const hintBtn = document.getElementById('hintBtn');
+  const seeBtn  = document.getElementById('seeBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const lUnit = document.getElementById('l-unit');
+  const lTitle = document.getElementById('l-title');
+  const lObj = document.getElementById('l-obj');
+  const probArea = document.getElementById('probArea');
+  const practiceEl = document.getElementById('practice');
+  const geoEl = document.getElementById('geo');
+  const dataEl = document.getElementById('data');
+  const soonEl = document.getElementById('soon');
+  const soonMsgEl = document.getElementById('soon-msg');
+
+  /* ====== chat rendering ====== */
+  function bubble(role, html, wide){
+    const d = document.createElement('div');
+    d.className = 'msg ' + (role === 'assistant' ? 'bot' : 'me') + (wide ? ' wide' : '');
+    d.innerHTML = (role === 'assistant' ? BOT_AV : '') + '<div class="bub">' + html + '</div>';
+    chat.appendChild(d); chat.scrollTop = chat.scrollHeight;
+    return d;
+  }
+  function meSay(text){
+    const d = document.createElement('div');
+    d.className = 'msg me';
+    const b = document.createElement('div'); b.className = 'bub';
+    b.textContent = text;                    // textContent => آمن ضد أي رموز
+    d.appendChild(b);
+    chat.appendChild(d); chat.scrollTop = chat.scrollHeight;
+  }
+  function typing(){
+    const d = document.createElement('div'); d.className = 'msg bot'; d.id = 'typing';
+    d.innerHTML = BOT_AV + '<div class="bub"><div class="typing"><span></span><span></span><span></span></div></div>';
+    chat.appendChild(d); chat.scrollTop = chat.scrollHeight;
+  }
+  function stopTyping(){ const t = document.getElementById('typing'); if (t) t.remove(); }
+  function botSay(html, delay, done){
+    typing();
+    setTimeout(() => { stopTyping(); bubble('assistant', html); if (done) done(); }, delay || 480);
+  }
+
+  /* ====== rail ====== */
+  function renderRail(){
+    rail.innerHTML = RAIL.map(it => {
+      if (it.g) return `<div class="rail-group">${it.g}</div>`;
+      const i = it.u, L = LESSONS[i];
+      const done = L.bank && solved[i].every(Boolean);
+      const cls = 'chip' + (i === uIdx ? ' now' : '') + (done ? ' done' : '');
+      const tag = L.kind === 'soon' ? ' <span class="soon-tag">قريبًا 🚧</span>' : '';
+      return `<div class="${cls}" data-i="${i}"><span class="d"></span>${toAr(i+1)} ${L.chip}${tag}</div>`;
+    }).join('');
+    rail.querySelectorAll('.chip[data-i]').forEach(c =>
+      c.addEventListener('click', () => selectUnit(+c.dataset.i)));
+  }
+
+  /* ====== progress ====== */
+  function updateProgress(){
+    const L = LESSONS[uIdx];
+    if (!L.bank) return;
+    const total = L.bank.length;
+    const n = solved[uIdx].filter(Boolean).length;
+    progressEl.innerHTML = `حليت <b>${toAr(n)}</b> من <b>${toAr(total)}</b>`;
+  }
+
+  /* ====== view switching ====== */
+  function setView(v){
+    probArea.style.display   = (v === 'bank') ? '' : 'none';
+    practiceEl.style.display = (v === 'bank') ? '' : 'none';
+    geoEl.style.display      = (v === 'geo')  ? '' : 'none';
+    dataEl.style.display     = (v === 'data') ? '' : 'none';
+    soonEl.style.display     = (v === 'soon') ? '' : 'none';
+  }
+
+  /* ====== unit selection ====== */
+  function selectUnit(i){
+    uIdx = i; pIdx = 0; step = 0;
+    const L = LESSONS[i];
+    lUnit.textContent  = L.eyebrow;
+    lTitle.textContent = L.title;
+    lObj.style.display = 'none';
+    renderRail();
+
+    if (L.kind === 'geo'){ setView('geo'); window.GEO.show(L.geo); return; }
+    if (L.kind === 'data'){ setView('data'); window.DATAMOD.show(); return; }
+    if (L.kind === 'soon'){
+      setView('soon');
+      soonMsgEl.textContent = L.soonMsg || 'الدرس ده جاي قريب';
+      return;
+    }
+
+    /* وحدة بنك أسئلة */
+    setView('bank');
+    updateProgress();
+    chat.innerHTML = '';
+    nextBtn.disabled = true;
+    bubble('assistant', `يلا نبدأ <b>${L.title}</b>! 💪 هحلّك سؤال سؤال، ولو محتاج مساعدة دوس «تلميح».`);
+    setTimeout(() => loadProblem(0), 560);
+  }
+
+  /* ====== problem flow ====== */
+  function loadProblem(i){
+    pIdx = i; step = 0;
+    const p = LESSONS[uIdx].bank[i];
+    const numeric = isNumericAns(p.answer);
+    probL.textContent = "المسألة الحالية:";
+    probEl.textContent = p.q;
+    inp.value = '';
+    inp.setAttribute('inputmode', numeric ? 'numeric' : 'text');
+    inp.placeholder = numeric ? 'اكتب الإجابة بالأرقام…' : 'اكتب إجابتك…';
+    hintBtn.disabled = false;
+    seeBtn.style.display = (p.type === 'selfcheck') ? '' : 'none';
+    nextBtn.disabled = !solved[uIdx][i];
+    const intro = (p.type === 'selfcheck')
+      ? `يلا نحل ده: <b>${p.q}</b>\nاكتب إجابتك، وبعدين دوس «شوف الإجابة» وقارن.`
+      : `يلا نحل ده: <b>${p.q}</b>\nفكّر واكتب إجابتك — ولو محتاج مساعدة دوس «تلميح».`;
+    botSay(intro);
+    inp.focus();
+  }
+
+  function showNextHint(){
+    const p = LESSONS[uIdx].bank[pIdx];
+    if (step < p.ladder.length){
+      botSay(p.ladder[step]);
+      step++;
+      if (p.type === 'num' && step === p.ladder.length) nextBtn.disabled = false; // عرضنا الحل الكامل
+    } else if (p.type === 'selfcheck'){
+      botSay('خلصنا التلميحات 🙂 دوس «شوف الإجابة» وقارن بإجابتك.');
+    } else {
+      botSay('ده كل اللي عندي من تلميحات للسؤال ده 🙂 دوس «سؤال جديد» نكمّل.');
+    }
+  }
+
+  function markSolved(){
+    if (!solved[uIdx][pIdx]){ solved[uIdx][pIdx] = true; updateProgress(); renderRail(); }
+  }
+
+  function checkAnswer(text){
+    const p = LESSONS[uIdx].bank[pIdx];
+    if (p.type === 'selfcheck'){
+      botSay('برافو إنك حاولت! 👏 دوس «شوف الإجابة» وقارن بإجابتك، وبعدين قوللي صح ولا غلط.');
+      return;
+    }
+    if (normAns(text) !== '' && normAns(text) === normAns(p.answer)){
+      markSolved();
+      nextBtn.disabled = false;
+      botSay(`${pick(PRAISE)} ${p.sol}`);
+      if (solved[uIdx].every(Boolean)) botSay('جامد جدًا! خلّصت كل أسئلة الوحدة دي 🎉🎉 جرّب وحدة تانية من فوق.', 1100);
+    } else {
+      showNextHint();
+    }
+  }
+
+  function revealSelfCheck(){
+    const p = LESSONS[uIdx].bank[pIdx];
+    if (p.type !== 'selfcheck') return;
+    botSay(`الإجابة الصحيحة: <b>${p.answer}</b>\n${p.sol}\nقارنها بإجابتك — كانت صح ولا غلط؟`, 480, showMarkButtons);
+  }
+  function showMarkButtons(){
+    const d = document.createElement('div'); d.className = 'msg bot';
+    d.innerHTML = BOT_AV;
+    const b = document.createElement('div'); b.className = 'bub';
+    b.textContent = 'قوللي بصراحة: إجابتك كانت صح ولا غلط؟';
+    const row = document.createElement('div'); row.className = 'mark-row';
+    const ok = document.createElement('button'); ok.className = 'mark ok'; ok.textContent = 'صح ✅';
+    const no = document.createElement('button'); no.className = 'mark no'; no.textContent = 'غلط';
+    row.appendChild(ok); row.appendChild(no); b.appendChild(row); d.appendChild(b);
+    chat.appendChild(d); chat.scrollTop = chat.scrollHeight;
+    ok.addEventListener('click', () => { ok.disabled = true; no.disabled = true; markSelf(true); });
+    no.addEventListener('click', () => { ok.disabled = true; no.disabled = true; markSelf(false); });
+  }
+  function markSelf(correct){
+    if (correct){
+      markSolved();
+      botSay(`${pick(PRAISE)} إجابة سليمة، شاطر! 👏`);
+      if (solved[uIdx].every(Boolean)) botSay('جامد جدًا! خلّصت كل أسئلة الوحدة دي 🎉🎉 جرّب وحدة تانية من فوق.', 1100);
+    } else {
+      botSay('مفيش مشكلة خالص، المرة الجاية هتظبطها 💪 بصّ للإجابة كويس وحاول تفهمها تاني.');
+    }
+    nextBtn.disabled = false;
+  }
+
+  /* ====== events ====== */
+  function onSend(){
+    const L = LESSONS[uIdx];
+    if (!L.bank) return;
+    const t = inp.value.trim();
+    if (!t) return;
+    inp.value = '';
+    meSay(t);
+    checkAnswer(t);
+  }
+  send.addEventListener('click', onSend);
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') onSend(); });
+  hintBtn.addEventListener('click', () => { if (LESSONS[uIdx].bank) showNextHint(); });
+  seeBtn.addEventListener('click', revealSelfCheck);
+  nextBtn.addEventListener('click', () => {
+    if (nextBtn.disabled) return;
+    loadProblem((pIdx + 1) % LESSONS[uIdx].bank.length);
+  });
+
+  /* ====== الهندسة التفاعلية (وحدتا ١٢ و١٣) — معزولة جوه #geo ====== */
+  (function(){
+    const geoRoot = document.getElementById('geo');
+    const ar = n => String(n).replace(/[0-9]/g, d => '٠١٢٣٤٥٦٧٨٩'[+d]);
+    function activate(p){
+      geoRoot.querySelectorAll('.tab').forEach(x => x.classList.toggle('on', x.dataset.p === p));
+      geoRoot.querySelectorAll('.panel').forEach(x => x.classList.toggle('on', x.id === 'p-' + p));
+    }
+    geoRoot.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => activate(t.dataset.p)));
+
+    /* --- الزوايا --- */
+    const svg=document.getElementById('angSvg'),handle=document.getElementById('handle'),rayMove=document.getElementById('rayMove'),arc=document.getElementById('arc'),degOut=document.getElementById('degOut'),kindOut=document.getElementById('kindOut'),angTask=document.getElementById('angTask');
+    const CX=150,CY=200,R=125; let task='free',deg=90;
+    function svgPt(evt){const p=svg.createSVGPoint();p.x=evt.clientX;p.y=evt.clientY;return p.matrixTransform(svg.getScreenCTM().inverse());}
+    function classify(d){if(d>=178)return'مستقيمة';if(Math.abs(d-90)<=2)return'قائمة';if(d<90)return'حادّة';return'منفرجة';}
+    function drawArc(d){const ar2=36,steps=Math.max(2,Math.round(d/4));let path='';for(let i=0;i<=steps;i++){const t=(d*i/steps)*Math.PI/180;path+=(i?'L':'M')+(CX+ar2*Math.cos(t)).toFixed(1)+' '+(CY-ar2*Math.sin(t)).toFixed(1)+' ';}arc.setAttribute('d',path);}
+    function render(){const rad=deg*Math.PI/180,hx=CX+R*Math.cos(rad),hy=CY-R*Math.sin(rad);handle.setAttribute('cx',hx);handle.setAttribute('cy',hy);rayMove.setAttribute('x2',hx);rayMove.setAttribute('y2',hy);drawArc(deg);const k=classify(deg);degOut.textContent=ar(Math.round(deg))+'°';kindOut.textContent=k;checkTask(k);}
+    function checkTask(k){if(task==='free'){angTask.className='task';angTask.textContent='حرّك النقطة وجرّب الأنواع المختلفة 👆';return;}const want={acute:'حادّة',right:'قائمة',obtuse:'منفرجة'}[task];let ok=false;if(task==='acute')ok=(deg>=25&&deg<=80);if(task==='right')ok=(Math.abs(deg-90)<=2);if(task==='obtuse')ok=(deg>=100&&deg<=170);if(ok){angTask.className='task good';angTask.textContent='برافو! 🎉 دي فعلاً زاوية '+want+'.';}else{angTask.className='task bad';angTask.textContent='لسه… المطلوب زاوية '+want+'. كمّل تحريك النقطة.';}}
+    let dragging=false;
+    function moveTo(evt){const p=svgPt(evt);let d=Math.atan2(CY-p.y,p.x-CX)*180/Math.PI;d=Math.max(0,Math.min(180,d));deg=d;render();}
+    handle.addEventListener('pointerdown',e=>{dragging=true;handle.setPointerCapture(e.pointerId);handle.style.cursor='grabbing';});
+    svg.addEventListener('pointermove',e=>{if(dragging){e.preventDefault();moveTo(e);}});
+    svg.addEventListener('pointerup',()=>{dragging=false;handle.style.cursor='grab';});
+    svg.addEventListener('pointercancel',()=>{dragging=false;});
+    svg.addEventListener('pointerdown',e=>{if(e.target!==handle)moveTo(e);});
+    geoRoot.querySelectorAll('#tasks .chip').forEach(c=>c.addEventListener('click',()=>{geoRoot.querySelectorAll('#tasks .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');task=c.dataset.t;render();}));
+    render();
+
+    /* --- الأشكال --- */
+    const shapeSvg=document.getElementById('shapeSvg'),shapeInfo=document.getElementById('shapeInfo'),shapeProp=document.getElementById('shapeProp'),shapeChips=document.getElementById('shapeChips');
+    function reg(cx,cy,r,n,rot){const p=[];for(let i=0;i<n;i++){const a=(rot+i*360/n)*Math.PI/180;p.push([cx+r*Math.cos(a),cy-r*Math.sin(a)]);}return p;}
+    const SHAPES=[
+      {name:'مثلث',s:3,v:3,pts:reg(190,120,72,3,90),prop:'ليه ٣ أضلاع و٣ رؤوس. لو أضلاعه التلاتة متساوية يبقى مثلث متساوي الأضلاع.'},
+      {name:'مربع',s:4,v:4,pts:reg(190,110,72,4,45),prop:'٤ أضلاع متساوية و٤ زوايا قائمة (كل زاوية ٩٠°).'},
+      {name:'مستطيل',s:4,v:4,pts:[[100,65],[280,65],[280,160],[100,160]],prop:'٤ أضلاع، كل ضلعين متقابلين متساويين، و٤ زوايا قائمة.'},
+      {name:'خماسي',s:5,v:5,pts:reg(190,115,72,5,90),prop:'مضلّع ليه ٥ أضلاع و٥ رؤوس.'},
+      {name:'سداسي',s:6,v:6,pts:reg(190,112,72,6,90),prop:'مضلّع ليه ٦ أضلاع و٦ رؤوس.'}
+    ];
+    function drawShape(sh){const poly=sh.pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');const dots=sh.pts.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="6" fill="#0bb39b" stroke="#fff" stroke-width="2"/>`).join('');shapeSvg.innerHTML=`<polygon points="${poly}" fill="rgba(246,166,9,.16)" stroke="#d98a00" stroke-width="4" stroke-linejoin="round"/>${dots}`;shapeInfo.textContent=ar(sh.s)+' أضلاع · '+ar(sh.v)+' رؤوس';shapeProp.textContent=sh.prop;}
+    shapeChips.innerHTML=SHAPES.map((s,i)=>`<button class="chip${i===0?' on':''}" data-i="${i}">${s.name}</button>`).join('');
+    shapeChips.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{shapeChips.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');drawShape(SHAPES[+c.dataset.i]);}));
+    drawShape(SHAPES[0]);
+
+    /* --- التماثل --- */
+    const symSvg=document.getElementById('symSvg'),symTask=document.getElementById('symTask'); const AX=190;
+    const SYM=[
+      {name:'مربع',ans:true,poly:'120,55 260,55 260,165 120,165',why:'النص اليمين مطابق للنص الشمال تمامًا.'},
+      {name:'مثلث متساوي الساقين',ans:true,poly:'190,50 255,165 125,165',why:'القمة فوق خط المرآة والجانبين متساويين.'},
+      {name:'مثلث قائم الزاوية',ans:false,poly:'120,55 120,165 270,165',why:'الجانب اليمين مش زي الشمال حوالين الخط ده.'},
+      {name:'شكل حرف L',ans:false,poly:'130,55 175,55 175,120 255,120 255,165 130,165',why:'الشكل مايل لجهة، فمش متماثل حوالين الخط ده.'}
+    ];
+    let si=0,answered=false;
+    function drawSym(){const s=SYM[si];answered=false;symSvg.innerHTML=`<line x1="${AX}" y1="30" x2="${AX}" y2="190" stroke="#ff6b6b" stroke-width="2.5" stroke-dasharray="7 6"/><polygon points="${s.poly}" fill="rgba(11,179,155,.15)" stroke="#1c3a5e" stroke-width="4" stroke-linejoin="round"/>`;symTask.className='task';symTask.textContent='الشكل: '+s.name+' — متماثل ولا لأ؟';}
+    function answer(choice){if(answered)return;answered=true;const s=SYM[si],ok=(choice===s.ans);symTask.className='task '+(ok?'good':'bad');symTask.textContent=(ok?'صح! 🎉 ':'مش ظبط. ')+(s.ans?'الشكل متماثل — ':'الشكل غير متماثل — ')+s.why;}
+    document.getElementById('symYes').addEventListener('click',()=>answer(true));
+    document.getElementById('symNo').addEventListener('click',()=>answer(false));
+    document.getElementById('symNext').addEventListener('click',()=>{si=(si+1)%SYM.length;drawSym();});
+    drawSym();
+
+    /* --- الواجهة العامة --- */
+    window.GEO = {
+      show(mode){
+        const a=geoRoot.querySelector('[data-p="angles"]'),
+              s=geoRoot.querySelector('[data-p="shapes"]'),
+              y=geoRoot.querySelector('[data-p="sym"]');
+        if(mode==='angles'){ a.style.display=''; s.style.display='none'; y.style.display='none'; activate('angles'); }
+        else { a.style.display='none'; s.style.display=''; y.style.display=''; activate('shapes'); }
+      }
+    };
+  })();
+
+  /* ====== البيانات والتمثيلات البيانية (وحدة ١١) — معزولة جوه #data ====== */
+  (function(){
+    const dataRoot=document.getElementById('data');
+    const ar = n => String(n).replace(/[0-9]/g, d => '٠١٢٣٤٥٦٧٨٩'[+d]);
+    const norm = s => (s||'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/\s/g,'').trim();
+    const MAX=7;
+    const DATA=[{d:'السبت',v:3},{d:'الأحد',v:5},{d:'الاثنين',v:2},{d:'الثلاثاء',v:6}];
+
+    function activate(p){
+      dataRoot.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.p===p));
+      dataRoot.querySelectorAll('.panel').forEach(x=>x.classList.toggle('on',x.id==='p-'+p));
+    }
+    dataRoot.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>activate(t.dataset.p)));
+
+    /* ---- رسم الأعمدة ---- */
+    const AX=52, BASE=215, TOP=25, PLOTH=190, per=PLOTH/MAX, SLOT0=62, SLOT1=365;
+    function chartSVG(bars){
+      let g='';
+      for(let i=0;i<=MAX;i++){const y=BASE-i*per;
+        g+=`<line x1="${AX}" y1="${y.toFixed(1)}" x2="365" y2="${y.toFixed(1)}" stroke="#ece0c9" stroke-width="1"/>`;
+        g+=`<text x="${AX-8}" y="${(y+4).toFixed(1)}" text-anchor="end" font-family="Baloo Bhaijaan 2" font-size="13" fill="#6f7e92">${ar(i)}</text>`;
+      }
+      g+=`<line x1="${AX}" y1="${TOP}" x2="${AX}" y2="${BASE}" stroke="#1c3a5e" stroke-width="2.5"/>`;
+      g+=`<line x1="${AX}" y1="${BASE}" x2="365" y2="${BASE}" stroke="#1c3a5e" stroke-width="2.5"/>`;
+      const n=bars.length, slot=(SLOT1-SLOT0)/n, bw=slot*0.56;
+      bars.forEach((b,i)=>{
+        const cx=SLOT0+slot*(i+0.5), x=cx-bw/2, h=b.value*per, y=BASE-h;
+        g+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="5" fill="${b.color}"/>`;
+        if(b.value>0) g+=`<text x="${cx.toFixed(1)}" y="${(y-7).toFixed(1)}" text-anchor="middle" font-family="Baloo Bhaijaan 2" font-size="15" fill="#10243f">${ar(b.value)}</text>`;
+        g+=`<text x="${cx.toFixed(1)}" y="${(BASE+19).toFixed(1)}" text-anchor="middle" font-family="Tajawal" font-weight="700" font-size="13" fill="#1c3a5e">${b.label}</text>`;
+      });
+      return g;
+    }
+
+    /* ---- اقرأ الرسم ---- */
+    const readSvg=document.getElementById('readSvg'), qText=document.getElementById('qText'),
+          ansIn=document.getElementById('ans'), task=document.getElementById('dTask'),
+          numBox=document.getElementById('numBox'), scBox=document.getElementById('scBox');
+    readSvg.innerHTML=chartSVG(DATA.map(d=>({label:d.d,value:d.v,color:'#f6a609'})));
+
+    const QS=[
+      {t:'كام كتاب قروا يوم الأحد؟', a:'5', sc:false,
+       h:['بُصّ على عمود الأحد، وعُدّ لحد فين وصل.','عمود الأحد واصل لخط الـ ٥.'], rev:'٥ كتب.'},
+      {t:'الفرق بين يوم الثلاثاء ويوم الاثنين؟', a:'4', sc:false,
+       h:['الثلاثاء ٦، الاثنين ٢. اطرحهم.','٦ − ٢ = ؟'], rev:'٦ − ٢ = ٤.'},
+      {t:'كام كتاب في السبت والأحد مع بعض؟', a:'8', sc:false,
+       h:['السبت ٣، الأحد ٥. اجمعهم.','٣ + ٥ = ؟'], rev:'٣ + ٥ = ٨.'},
+      {t:'إجمالي الكتب في الأربع أيام؟', a:'16', sc:false,
+       h:['اجمع الأربعة: ٣ + ٥ + ٢ + ٦.','٣+٥=٨، و٢+٦=٨، و٨+٨ = ؟'], rev:'٣+٥+٢+٦ = ١٦.'},
+      {t:'أنهي يوم قروا فيه أكتر كتب؟', a:'الثلاثاء', sc:true,
+       h:['دوّر على أطول عمود.','أطول عمود هو الثلاثاء (٦).'], rev:'الثلاثاء (٦ كتب).'},
+      {t:'أنهي يوم قروا فيه أقل كتب؟', a:'الاثنين', sc:true,
+       h:['دوّر على أقصر عمود.','أقصر عمود هو الاثنين (٢).'], rev:'الاثنين (٢ كتاب).'}
+    ];
+    let qi=0, hintN=0;
+    function loadQ(){
+      const q=QS[qi]; hintN=0; ansIn.value='';
+      qText.textContent=q.t;
+      task.className='task'; task.textContent='جاوب اللي قدامك 👆';
+      if(q.sc){ numBox.style.display='none'; scBox.style.display='flex'; }
+      else { numBox.style.display='flex'; scBox.style.display='none'; }
+    }
+    function nextHint(){
+      const q=QS[qi];
+      if(hintN<q.h.length){ task.className='task'; task.textContent='💡 '+q.h[hintN]; hintN++; }
+      else { task.className='task'; task.textContent='👀 '+q.rev; }
+    }
+    document.getElementById('check').addEventListener('click',()=>{
+      const q=QS[qi];
+      if(norm(ansIn.value)===norm(q.a)){ task.className='task good'; task.textContent='صح! 🎉 '+q.rev; }
+      else nextHint();
+    });
+    ansIn.addEventListener('keydown',e=>{ if(e.key==='Enter') document.getElementById('check').click(); });
+    document.getElementById('reveal').addEventListener('click',()=>{ const q=QS[qi]; task.className='task good'; task.textContent='👀 الإجابة: '+q.rev; });
+    document.getElementById('dHint').addEventListener('click',nextHint);
+    document.getElementById('dNext').addEventListener('click',()=>{ qi=(qi+1)%QS.length; loadQ(); });
+    loadQ();
+
+    /* ---- اعمل عمود ---- */
+    const buildSvg=document.getElementById('buildSvg'), curVal=document.getElementById('curVal'), bTask=document.getElementById('bTask');
+    let cur=0, target=4;
+    function drawBuild(){
+      const bars=DATA.map(d=>({label:d.d,value:d.v,color:'#ead9b8'}));
+      bars.push({label:'الجمعة',value:cur,color:'#0bb39b'});
+      buildSvg.innerHTML=chartSVG(bars);
+      curVal.textContent=ar(cur)+(cur===1?' كتاب':' كتب');
+      if(cur===target){ bTask.className='task good'; bTask.textContent='تمام! 🎉 وصّلت عمود الجمعة لـ '+ar(target)+'. عينك بقت بتقرا الرسم صح.'; }
+      else { bTask.className='task'; bTask.textContent='الهدف: خلي عمود الجمعة يوصل '+ar(target)+' كتب.'; }
+    }
+    document.getElementById('plus').addEventListener('click',()=>{ if(cur<MAX){cur++;drawBuild();} });
+    document.getElementById('minus').addEventListener('click',()=>{ if(cur>0){cur--;drawBuild();} });
+    document.getElementById('bNext').addEventListener('click',()=>{
+      let t; do{ t=Math.floor(Math.random()*7)+1; }while(t===target); target=t; cur=0; drawBuild();
+    });
+    drawBuild();
+
+    window.DATAMOD = { show(){ activate('read'); } };
+  })();
+
+  /* ====== boot ====== */
+  bubble('assistant', 'أهلاً يا بطل! 👋 أنا فهمان. اختار وحدة من فوق ونتمرّن سؤال سؤال، أو جرّب وحدات الهندسة بالتحريك واللمس. يلا بينا! 💪');
+  setTimeout(() => selectUnit(0), 720);
+</script>
+</body>
+</html>
