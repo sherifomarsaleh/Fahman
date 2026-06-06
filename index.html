@@ -53,6 +53,22 @@
   .soon-tag{font-size:10px;font-weight:700;background:#f0e3cf;color:var(--ink2);
     padding:1px 7px;border-radius:20px;}
 
+  .unit-select-wrap{position:relative;margin-bottom:16px;}
+  .unit-select{width:100%;font-family:'Baloo Bhaijaan 2',cursive;font-weight:700;
+    font-size:16.5px;color:#fff;background:var(--ink);border:1.5px solid var(--ink);
+    border-radius:16px;padding:15px 18px 15px 46px;-webkit-appearance:none;appearance:none;
+    cursor:pointer;line-height:1.3;box-shadow:0 8px 22px var(--shadow);
+    text-align:right;direction:rtl;}
+  .unit-select:focus{outline:none;border-color:var(--gold);
+    box-shadow:0 0 0 3px rgba(246,166,9,.28);}
+  .unit-select-wrap::after{content:"▾";position:absolute;left:18px;top:50%;
+    transform:translateY(-50%);color:var(--gold);font-size:17px;font-weight:700;
+    pointer-events:none;}
+  .unit-select optgroup{font-family:'Tajawal';font-weight:800;color:var(--gold-d);
+    font-size:13px;background:var(--cream);}
+  .unit-select option{font-family:'Tajawal';font-weight:600;color:var(--ink);
+    background:#fff;font-size:15px;}
+
   .lesson{background:linear-gradient(135deg,var(--ink) 0%,var(--ink2) 100%);
     color:var(--cream);border-radius:20px;padding:18px 20px;margin-bottom:14px;
     box-shadow:0 14px 30px var(--shadow);position:relative;overflow:hidden;}
@@ -222,7 +238,9 @@
   </div>
 
   <div class="rail-l">منهج السنة كاملًا — ١٣ وحدة</div>
-  <div class="rail" id="rail"></div>
+  <div class="unit-select-wrap">
+    <select class="unit-select" id="unitSelect" aria-label="اختر الوحدة"></select>
+  </div>
 
   <div class="lesson">
     <div class="u" id="l-unit"></div>
@@ -584,8 +602,8 @@
 
   /* ترتيب الشريط الجانبي مع عناوين المحاور */
   const RAIL = [
-    {g:"المحور الأول · الحس العددي"}, {u:0},{u:1},{u:2},{u:3},
-    {g:"المحور الثاني · العمليات والتفكير الجبري"}, {u:4},{u:5},{u:6},{u:7},
+    {g:"المحور الأول — الحس العددي"}, {u:0},{u:1},{u:2},{u:3},
+    {g:"المحور الثاني — العمليات والتفكير الجبري"}, {u:4},{u:5},{u:6},{u:7},
     {g:"الترم الثاني"}, {u:8},{u:9},{u:10},{u:11},{u:12}
   ];
 
@@ -595,6 +613,21 @@
   let pIdx = 0;       // المسألة الحالية
   let step = 0;       // مؤشّر سلّم التلميحات
   const solved = LESSONS.map(L => L.bank ? L.bank.map(() => false) : []);
+
+  /* ====== حفظ التقدّم في المتصفّح ====== */
+  const SKEY = 'fahman_solved_v1';
+  function saveSolved(){ try{ localStorage.setItem(SKEY, JSON.stringify(solved)); }catch(e){} }
+  function loadSolved(){
+    try{
+      const data = JSON.parse(localStorage.getItem(SKEY) || 'null');
+      if (!data) return;
+      LESSONS.forEach((L, i) => {
+        if (L.bank && Array.isArray(data[i]))
+          L.bank.forEach((_, j) => { if (data[i][j]) solved[i][j] = true; });
+      });
+    }catch(e){}
+  }
+  loadSolved();
 
   /* ====== helpers ====== */
   const AR = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
@@ -611,7 +644,7 @@
   const pick = a => a[Math.floor(Math.random() * a.length)];
 
   const BOT_AV = '<div class="av"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v3M7 8h10a2 2 0 012 2v7a2 2 0 01-2 2H7a2 2 0 01-2-2v-7a2 2 0 012-2z" stroke="#10243f" stroke-width="2" stroke-linecap="round"/><circle cx="9.5" cy="13" r="1.3" fill="#10243f"/><circle cx="14.5" cy="13" r="1.3" fill="#10243f"/></svg></div>';
-  const rail = document.getElementById('rail');
+  const unitSelect = document.getElementById('unitSelect');
   const chat = document.getElementById('chat');
   const inp  = document.getElementById('inp');
   const send = document.getElementById('send');
@@ -658,19 +691,27 @@
     setTimeout(() => { stopTyping(); bubble('assistant', html); if (done) done(); }, delay || 480);
   }
 
-  /* ====== rail ====== */
+  /* ====== قائمة الوحدات المنسدلة ====== */
   function renderRail(){
-    rail.innerHTML = RAIL.map(it => {
-      if (it.g) return `<div class="rail-group">${it.g}</div>`;
-      const i = it.u, L = LESSONS[i];
-      const done = L.bank && solved[i].every(Boolean);
-      const cls = 'chip' + (i === uIdx ? ' now' : '') + (done ? ' done' : '');
-      const tag = L.kind === 'soon' ? ' <span class="soon-tag">قريبًا 🚧</span>' : '';
-      return `<div class="${cls}" data-i="${i}"><span class="d"></span>${toAr(i+1)} ${L.chip}${tag}</div>`;
-    }).join('');
-    rail.querySelectorAll('.chip[data-i]').forEach(c =>
-      c.addEventListener('click', () => selectUnit(+c.dataset.i)));
+    let html = '', open = false;
+    RAIL.forEach(it => {
+      if (it.g){
+        if (open) html += '</optgroup>';
+        html += `<optgroup label="${it.g}">`;
+        open = true;
+      } else {
+        const i = it.u, L = LESSONS[i];
+        const done = L.bank && solved[i].every(Boolean);
+        const sel = i === uIdx ? ' selected' : '';
+        const mark = done ? '  ✓' : '';
+        html += `<option value="${i}"${sel}>الوحدة ${toAr(i+1)} — ${L.chip}${mark}</option>`;
+      }
+    });
+    if (open) html += '</optgroup>';
+    unitSelect.innerHTML = html;
+    unitSelect.value = uIdx;
   }
+  unitSelect.addEventListener('change', () => selectUnit(+unitSelect.value));
 
   /* ====== progress ====== */
   function updateProgress(){
@@ -750,7 +791,7 @@
   }
 
   function markSolved(){
-    if (!solved[uIdx][pIdx]){ solved[uIdx][pIdx] = true; updateProgress(); renderRail(); }
+    if (!solved[uIdx][pIdx]){ solved[uIdx][pIdx] = true; saveSolved(); updateProgress(); renderRail(); }
   }
 
   function checkAnswer(text){
@@ -988,6 +1029,7 @@
   })();
 
   /* ====== boot ====== */
+  renderRail();
   bubble('assistant', 'أهلاً يا بطل! 👋 أنا فهمان. اختار وحدة من فوق ونتمرّن سؤال سؤال، أو جرّب وحدات الهندسة بالتحريك واللمس. يلا بينا! 💪');
   setTimeout(() => selectUnit(0), 720);
 </script>
